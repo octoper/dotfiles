@@ -26,14 +26,11 @@ alias glog="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset
 # List all files colorized in long format
 alias l="ls -laF"
 
-
 # Redis
 alias flush-redis="redis-cli FLUSHALL"
 
-
 # Enable aliases to be sudo’ed
 alias sudo='sudo '
-
 
 # Switch NPM
 alias npmnpm="npm config set registry https://registry.npmjs.org"
