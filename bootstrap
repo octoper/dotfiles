@@ -2,8 +2,7 @@
 #
 # bootstrap installs things.
 
-function bootstrapTerminal() {	
-	sudo -v #ask password beforehand
+function ubuntuTerminalSetup() {
 	source ~/.dotfiles/installscript
 }
 
@@ -11,9 +10,11 @@ function bootstrapTerminal() {
 echo 'Bootstrap terminal'
 echo '------------------'
 echo 'This will reset your terminal. Are you sure you want to to this? (y/n) '
-read -p 'Answer: '  reply
+read -p 'Answer: ' reply
+
+sudo -v #ask password beforehand
 
 if [[ $reply =~ ^[Yy]$ ]]
 then
-   bootstrapTerminal
+   ubuntuTerminalSetup
 fi
