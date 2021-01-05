@@ -5,6 +5,7 @@ function run_silently() {
 
   if [ $? -ne 0 ]; then
     echo "Exiting...."
+    exit 1
   fi
 }
 
@@ -17,11 +18,13 @@ function show() {
 # Hide "last login" line when starting a new terminal session
 touch $HOME/.hushlogin
 
+echo ""
 echo 'Install ZSH'
 echo '-----------'
 run_silently sudo apt-get -y install zsh
 show "Successfully installed ZSH ✅"
 
+echo ""
 echo 'Install oh-my-zsh'
 echo '-----------------'
 [[ ! -e $HOME/.oh-my-zsh ]] && run_silently rm -rf $HOME/.oh-my-zsh
@@ -33,15 +36,16 @@ run_silently ln -s $HOME/.dotfiles/shell/.global-gitignore $HOME/.global-gitigno
 run_silently git config --global core.excludesfile $HOME/.global-gitignore
 
 # Symlink zsh prefs
-[[ ! -e $HOME/.zshrc ]] && run_silently rm $HOME/.zshrc
-run_silently ln -s $HOME/.dotfiles/shell/.zshrc $HOME/.zshrc
+[[ -e $HOME/.zshrc ]] && run_silently rm $HOME/.zshrc
+[[ ! -e $HOME/.zshrc ]]  && run_silently ln -s $HOME/.dotfiles/shell/.zshrc $HOME/.zshrc
 
 # Symlink vim prefs
-[[ ! -e $HOME/.vimrc ]] && run_silently rm $HOME/.vimrc
-run_silently ln -s $HOME/.dotfiles/shell/.vimrc $HOME/.vimrc
-[[ ! -e $HOME/.vim ]] && run_silently rm $HOME/.vim
-run_silently ln -s $HOME/.dotfiles/shell/.vim $HOME/.vim
+[[ -e $HOME/.vimrc ]] && run_silently rm $HOME/.vimrc
+[[ ! -e $HOME/.vimrc ]]  && run_silently ln -s $HOME/.dotfiles/shell/.vimrc $HOME/.vimrc
+[[ -e $HOME/.vim ]] && run_silently rm $HOME/.vim
+[[ ! -e $HOME/.vim ]] && run_silently ln -s $HOME/.dotfiles/shell/.vim $HOME/.vim
 
+echo ""
 echo 'Setting up system '
 echo '-------------------------------'
 run_silently sudo apt-get -y update \
@@ -50,6 +54,7 @@ run_silently sudo apt-get -y update \
    network-manager libnss3-tools jq xsel
 show "Done ✅"
 
+echo ""
 echo 'Install PHP 8.0'
 echo '---------------'
 run_silently echo "deb http://ppa.launchpad.net/ondrej/php/ubuntu focal main" > /etc/apt/sources.list.d/ppa_ondrej_php.list \
@@ -64,6 +69,7 @@ run_silently echo "deb http://ppa.launchpad.net/ondrej/php/ubuntu focal main" > 
        php8.0-redis php8.0-fpm
 show "Successfully installed PHP 8.0 ✅"
 
+echo ""
 echo 'Install PHP 7.4'
 echo '---------------'
 run_silently sudo apt-get install -y php7.4-cli php7.4-dev \
@@ -76,6 +82,7 @@ run_silently sudo apt-get install -y php7.4-cli php7.4-dev \
        php7.4-redis php7.4-fpm
 show "Successfully installed PHP 7.4 ✅"
 
+echo ""
 echo 'Install Docker'
 echo '--------------'
 run_silently sudo apt-get remove docker docker-engine docker.io containerd runc -y \
@@ -95,17 +102,20 @@ run_silently sudo apt-get remove docker docker-engine docker.io containerd runc 
   && run_silently sudo apt-get install docker-ce docker-ce-cli containerd.io -y
 show "Successfully installed Docker ✅"
 
+echo ""
 echo 'Install Composer'
 echo '----------------'
 run_silently php -r "readfile('http://getcomposer.org/installer');" | run_silently php -- --install-dir=/usr/bin/ --filename=composer
 show "Successfully installed Composer ✅"
 
+echo ""
 echo 'Install NodeJS'
 echo '------------'
 run_silently curl -sL https://deb.nodesource.com/setup_15.x | run_silently sudo -E bash -
 run_silently sudo apt-get install -y nodejs
 show "Successfully installed NodeJS ✅"
 
+echo ""
 echo 'Configure NPM'
 echo '-------------'
 # Create a directory for global packages and tell npm where to store globally installed packages
@@ -113,6 +123,7 @@ run_silently mkdir "${HOME}/.npm-packages"
 run_silently npm config set prefix "${HOME}/.npm-packages"
 show "Successfully configured NPM ✅"
 
+echo ""
 echo 'Install GitHub CLI'
 echo '------------------'
 run_silently sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0 \
@@ -121,27 +132,32 @@ run_silently sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11
   && run_silently sudo apt-get -y install gh
 show "Successfully installed GitHub CLI ✅"
 
+echo ""
 echo 'Install Laravel Valet'
 echo '---------------------'
 run_silently composer global require cpriego/valet-linux --ignore-platform-req=php
 valet install
 show "Successfully installed Laravel Valet ✅"
 
+echo ""
 echo 'Install Takeout'
 echo '---------------'
 run_silently composer global require tightenco/takeout --ignore-platform-req=php
 show "Successfully installed Takeout ✅"
 
+echo ""
 echo 'Install Expose'
 echo '--------------'
 run_silently composer global require beyondcode/expose --ignore-platform-req=php
 show "Successfully installed Expose ✅"
 
+echo ""
 echo 'Install Forge CLI'
 echo '--------------'
 run_silently composer global require beyondcode/forge-cli --ignore-platform-req=php
 show "Successfully installed Forge CLI ✅"
 
+echo ""
 ( chsh -s $(which zsh) )
 source ~/.zshrc
 
