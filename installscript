@@ -37,7 +37,7 @@ run_silently git config --global core.excludesfile $HOME/.global-gitignore
 
 # Symlink zsh prefs
 [[ -e $HOME/.zshrc ]] && run_silently rm $HOME/.zshrc
-[[ ! -e $HOME/.zshrc ]]  && run_silently ln -s $HOME/.dotfiles/shell/.zshrc $HOME/.zshrc
+[[ ! -e $HOME/.zshrc ]] && run_silently ln -s $HOME/.dotfiles/shell/.zshrc $HOME/.zshrc
 
 # Symlink vim prefs
 [[ -e $HOME/.vimrc ]] && run_silently rm $HOME/.vimrc
