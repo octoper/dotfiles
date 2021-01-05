@@ -19,7 +19,7 @@ then
   PS3="Select Operating System: "
   options=("Ubuntu" "MacOS" "Exit")
   select opt in "${options[@]}"; do
-    case $x in
+    case $opt in
       "Ubuntu")
         ubuntuTerminalSetup
         ;;
