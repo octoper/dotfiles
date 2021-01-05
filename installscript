@@ -106,6 +106,7 @@ echo ""
 echo 'Install Composer'
 echo '----------------'
 run_silently php -r "readfile('http://getcomposer.org/installer');" | run_silently php -- --install-dir=/usr/bin/ --filename=composer
+export PATH="$HOME/.composer/vendor/bin:$PATH"
 show "Successfully installed Composer ✅"
 
 echo ""
