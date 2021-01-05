@@ -12,9 +12,6 @@ alias d="php artisan dusk"
 alias sshconfig="vi ~/.ssh/config"
 alias sail='./vendor/bin/sail'
 
-# PHP Switch
-
-
 # Git
 alias gc="git checkout"
 alias gpo="git push origin"
@@ -25,9 +22,6 @@ alias glog="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset
 
 # List all files colorized in long format
 alias l="ls -laF"
-
-# Redis
-alias flush-redis="redis-cli FLUSHALL"
 
 # Enable aliases to be sudo’ed
 alias sudo='sudo '
