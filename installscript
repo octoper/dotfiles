@@ -24,7 +24,7 @@ show "Successfully installed ZSH ✅"
 
 echo 'Install oh-my-zsh'
 echo '-----------------'
-run_silently [[ -e $HOME/.oh-my-zsh ]] && run_silently rm -rf $HOME/.oh-my-zsh
+[[ ! -e $HOME/.oh-my-zsh ]] && run_silently rm -rf $HOME/.oh-my-zsh
 run_silently curl -L https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh | run_silently sh
 show "Successfully installed oh-my-zsh ✅"
 
@@ -33,13 +33,13 @@ run_silently ln -s $HOME/.dotfiles/shell/.global-gitignore $HOME/.global-gitigno
 run_silently git config --global core.excludesfile $HOME/.global-gitignore
 
 # Symlink zsh prefs
-run_silently [[ -e $HOME/.zshrc ]] && run_silently rm $HOME/.zshrc
+[[ ! -e $HOME/.zshrc ]] && run_silently rm $HOME/.zshrc
 run_silently ln -s $HOME/.dotfiles/shell/.zshrc $HOME/.zshrc
 
 # Symlink vim prefs
-run_silently [[ -e $HOME/.vimrc ]] && run_silently rm $HOME/.vimrc
+[[ ! -e $HOME/.vimrc ]] && run_silently rm $HOME/.vimrc
 run_silently ln -s $HOME/.dotfiles/shell/.vimrc $HOME/.vimrc
-run_silently [[ -e $HOME/.vim ]] && run_silently rm $HOME/.vim
+[[ ! -e $HOME/.vim ]] && run_silently rm $HOME/.vim
 run_silently ln -s $HOME/.dotfiles/shell/.vim $HOME/.vim
 
 echo 'Setting up system '
