@@ -99,9 +99,6 @@ run_silently mkdir "${HOME}/.npm-packages"
 run_silently npm config set prefix "${HOME}/.npm-packages"
 show "Successfully configured NPM ✅"
 
-echo 'Install wget'
-echo '------------'
-
 echo 'Install GitHub CLI'
 echo '------------------'
 run_silently sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0 \
@@ -112,14 +109,24 @@ show "Successfully installed GitHub CLI ✅"
 
 echo 'Install Laravel Valet'
 echo '---------------------'
-run_silently composer global require cpriego/valet-linux
+run_silently composer global require cpriego/valet-linux --ignore-platform-req=php
 valet install
 show "Successfully installed Laravel Valet ✅"
 
 echo 'Install Takeout'
-echo '---------------------'
-run_silently composer global require tightenco/takeout
+echo '---------------'
+run_silently composer global require tightenco/takeout --ignore-platform-req=php
 show "Successfully installed Takeout ✅"
+
+echo 'Install Expose'
+echo '--------------'
+run_silently composer global require beyondcode/expose --ignore-platform-req=php
+show "Successfully installed Expose ✅"
+
+echo 'Install Forge CLI'
+echo '--------------'
+run_silently composer global require beyondcode/forge-cli --ignore-platform-req=php
+show "Successfully installed Forge CLI ✅"
 
 ( chsh -s $(which zsh) )
 source ~/.zshrc
