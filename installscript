@@ -85,7 +85,7 @@ show "Successfully installed PHP 7.4 ✅"
 echo ""
 echo 'Install Docker'
 echo '--------------'
-run_silently sudo apt-get remove docker docker-engine docker.io containerd runc -y \
+run_silently sudo apt-get remove docker docker.io containerd runc -y \
   && run_silently sudo apt-get update -y \
   && run_silently sudo apt-get install -y \
     apt-transport-https \
