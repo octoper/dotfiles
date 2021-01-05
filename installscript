@@ -57,7 +57,7 @@ show "Done ✅"
 echo ""
 echo 'Install PHP 8.0'
 echo '---------------'
-run_silently echo "deb http://ppa.launchpad.net/ondrej/php/ubuntu focal main" > /etc/apt/sources.list.d/ppa_ondrej_php.list \
+run_silently sudo echo "deb http://ppa.launchpad.net/ondrej/php/ubuntu focal main" > /etc/apt/sources.list.d/ppa_ondrej_php.list \
   && run_silently sudo apt-get -y update \
   && run_silently sudo apt-get install -y php8.0-cli php8.0-dev \
        php8.0-pgsql php8.0-sqlite3 php8.0-gd \
