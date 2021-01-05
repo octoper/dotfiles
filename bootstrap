@@ -30,7 +30,7 @@ then
         break
         exit 0;
         ;;
-      *) echo "invalid option: $REPLY" && exit 0;;
+      *) echo "invalid option: $REPLY" && exit 1;;
     esac
   done
 fi
