@@ -102,19 +102,23 @@ run_silently sudo apt-get update -y \
   && run_silently sudo apt-get -y install docker-ce docker-ce-cli containerd.io
 show "Successfully installed Docker ✅"
 
-echo ""
-echo 'Install Composer'
-echo '----------------'
-run_silently php -r "readfile('http://getcomposer.org/installer');" | run_silently sudo php -- --install-dir=/usr/bin/ --filename=composer
-export PATH="$HOME/.composer/vendor/bin:$PATH"
-show "Successfully installed Composer ✅"
+if -z which composer;then
+  echo ""
+  echo 'Install Composer'
+  echo '----------------'
+  run_silently php -r "readfile('http://getcomposer.org/installer');" | run_silently sudo php -- --install-dir=/usr/bin/ --filename=composer
+  export PATH="$HOME/.composer/vendor/bin:$PATH"
+  show "Successfully installed Composer ✅"
+fi
 
-echo ""
-echo 'Install NodeJS'
-echo '------------'
-run_silently curl -sL https://deb.nodesource.com/setup_15.x | run_silently sudo -E bash -
-run_silently sudo apt-get install -y nodejs npm
-show "Successfully installed NodeJS ✅"
+if -z which nodejs;then
+  echo ""
+  echo 'Install NodeJS'
+  echo '--------------'
+  run_silently curl -sL https://deb.nodesource.com/setup_15.x | run_silently sudo -E bash -
+  run_silently sudo apt-get install -y nodejs npm
+  show "Successfully installed NodeJS ✅"
+fi
 
 echo ""
 echo 'Configure NPM'
@@ -124,14 +128,16 @@ echo '-------------'
 run_silently npm config set prefix "${HOME}/.npm-packages"
 show "Successfully configured NPM ✅"
 
-echo ""
-echo 'Install GitHub CLI'
-echo '------------------'
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0 \
-  && run_silently sudo apt-add-repository https://cli.github.com/packages \
-  && run_silently sudo apt-get -y update \
-  && run_silently sudo apt-get -y install gh
-show "Successfully installed GitHub CLI ✅"
+if -z which gh;then
+  echo ""
+  echo 'Install GitHub CLI'
+  echo '------------------'
+  sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0 \
+    && run_silently sudo apt-add-repository https://cli.github.com/packages \
+    && run_silently sudo apt-get -y update \
+    && run_silently sudo apt-get -y install gh
+  show "Successfully installed GitHub CLI ✅"
+fi
 
 echo ""
 echo 'Install Laravel Valet'
