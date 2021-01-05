@@ -28,8 +28,6 @@ function weather() {
    eval "curl http://wttr.in/${city}"
 }
 
-alias mysqladm='mysql -u root'
-
 function rector() {
    docker run -v $(pwd):/project rector/rector:latest process /project/$1 --set php80 --autoload-file /project/vendor/autoload.php 
 }
@@ -44,16 +42,6 @@ function commit() {
 
   git add .
   eval "git commit -a -m '${commitMessage}'"
-}
-
-function db {
-    if [ "$1" = "refresh" ]; then
-        mysql -uroot -e "drop database $2; create database $2"
-    elif [ "$1" = "create" ]; then
-        mysql -uroot -e "create database $2"
-    elif [ "$1" = "drop" ]; then
-        mysql -uroot -e "drop database $2"
-    fi
 }
 
 function scheduler () {

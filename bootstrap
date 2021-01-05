@@ -16,5 +16,21 @@ sudo -v #ask password beforehand
 
 if [[ $reply =~ ^[Yy]$ ]]
 then
-   ubuntuTerminalSetup
+  PS3="Select Operating System: "
+  options=("Ubuntu" "MacOS", "Exit")
+  select opt in "${options[@]}"; do
+    case $x in
+      "Ubuntu")
+        ubuntuTerminalSetup
+        ;;
+      "MacOS")
+        echo "Macintosh"
+        ;;
+      "Exit")
+        break
+        exit 0;
+        ;;
+      *) echo "invalid option: $REPLY" && exit 0;;
+    esac
+  done
 fi

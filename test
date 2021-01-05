@@ -1,0 +1,26 @@
+#!/bin/bash
+
+source ./helpers.sh
+
+#run_silently ls shel
+#print_error "oops"
+#print_success "Installed!!"
+#run_silently ls shell
+
+  PS3="Select Operating System: "
+  options=("Ubuntu" "MacOS" "Exit")
+  select x in "${options[@]}"; do
+    case $x in
+      "Ubuntu")
+        echo "Ubuntu"
+        ;;
+      "MacOS")
+        echo "Macintosh"
+        ;;
+      "Exit")
+        break
+        exit 0;
+        ;;
+      *) echo "invalid option $REPLY" && exit 0;;
+    esac
+  done
