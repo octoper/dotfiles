@@ -1,3 +1,14 @@
+# Switch PHP versions
+phpv() {
+    sudo update-alternatives --set php /usr/bin/php${1}
+    valet use $1
+    composer global update --ignore-platform-req=php
+    source ~/.zshrc
+}
+
+alias php80="phpv 8.0"
+alias php74="phpv 7.4"
+
 # Docker
 function ssh-docker() {
    docker exec -it "$@" bash

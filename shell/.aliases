@@ -30,3 +30,5 @@ alias sudo='sudo '
 alias npmnpm="npm config set registry https://registry.npmjs.org"
 alias npmgithub="npm config set registry https://npm.pkg.github.com"
 
+#Open
+# alias phpstorm="$(phpstorm $@)"

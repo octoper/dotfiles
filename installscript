@@ -19,25 +19,18 @@ function show() {
 touch $HOME/.hushlogin
 
 echo
-if ! command -v zsh >/dev/null;then
-  echo 'Install ZSH'
-  echo '-----------'
-  run_silently sudo apt-get -y install zsh
-  show "Successfully installed ZSH ✅"
-else
-  echo "Skipping... ZSH is already installed."
-fi
+
+echo 'Install ZSH'
+echo '-----------'
+run_silently sudo apt-get -y install zsh
+show "Successfully installed ZSH ✅"
 
 echo
-if [[ ! -d $HOME/.oh-my-zsh ]]; then
-  echo 'Install oh-my-zsh'
-  echo '-----------------'
-  run_silently rm -rf $HOME/.oh-my-zsh
-  run_silently sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-  show "Successfully installed oh-my-zsh ✅"
-else
-  echo "Skipping... Oh My ZSH is already installed."
-fi
+echo 'Install oh-my-zsh'
+echo '-----------------'
+run_silently rm -rf $HOME/.oh-my-zsh
+run_silently sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+show "Successfully installed oh-my-zsh ✅"
 
 # Add global gitignore
 [[ ! -e $HOME/.global-gitignore ]] && run_silently ln -s $HOME/.dotfiles/shell/.global-gitignore $HOME/.global-gitignore
@@ -111,36 +104,28 @@ run_silently sudo apt-get update -y &&
 show "Successfully installed Docker ✅"
 
 echo
-if ! command -v composer >/dev/null;then
-  echo 'Install Composer'
-  echo '----------------'
-  EXPECTED_COMPOSER_CHECKSUM="$(curl https://composer.github.io/installer.sig)"
-  run_silently php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-  ACTUAL_COMPOSER_CHECKSUM="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
-  if [ "$EXPECTED_COMPOSER_CHECKSUM" != "$ACTUAL_COMPOSER_CHECKSUM" ]
-  then
-      >&2 echo 'ERROR: Invalid installer checksum'
-      rm composer-setup.php
-      exit 1
-  fi
-  run_silently php composer-setup.php
-  run_silently rm composer-setup.php
-  run_silently sudo mv composer.phar /usr/local/bin/composer
-  show "Successfully installed Composer ✅"
-else
-  echo "Skipping... Composer is already installed."
+
+echo 'Install Composer'
+echo '----------------'
+EXPECTED_COMPOSER_CHECKSUM="$(curl https://composer.github.io/installer.sig)"
+run_silently php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+ACTUAL_COMPOSER_CHECKSUM="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
+if [ "$EXPECTED_COMPOSER_CHECKSUM" != "$ACTUAL_COMPOSER_CHECKSUM" ]; then
+  echo >&2 'ERROR: Invalid installer checksum'
+  rm composer-setup.php
+  exit 1
 fi
+run_silently php composer-setup.php
+run_silently rm composer-setup.php
+run_silently sudo mv composer.phar /usr/local/bin/composer
+show "Successfully installed Composer ✅"
 
 echo
-if ! command -v nodejs >/dev/null;then
-  echo 'Install NodeJS'
-  echo '--------------'
-  run_silently curl -sL https://deb.nodesource.com/setup_15.x | run_silently sudo -E bash -
-  run_silently sudo apt-get install -y nodejs npm
-  show "Successfully installed NodeJS ✅"
-else
-  echo "Skipping... NodeJS is already installed."
-fi
+echo 'Install NodeJS'
+echo '--------------'
+run_silently curl -sL https://deb.nodesource.com/setup_15.x | run_silently sudo -E bash -
+run_silently sudo apt-get install -y nodejs npm
+show "Successfully installed NodeJS ✅"
 
 echo ""
 echo 'Configure NPM'
@@ -151,28 +136,20 @@ run_silently npm config set prefix "${HOME}/.npm-packages"
 show "Successfully configured NPM ✅"
 
 echo
-if ! command -v gh >/dev/null;then
-  echo 'Install GitHub CLI'
-  echo '------------------'
-  sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0 &&
-    run_silently sudo apt-add-repository https://cli.github.com/packages &&
-    run_silently sudo apt-get -y update &&
-    run_silently sudo apt-get -y install gh
-  show "Successfully installed GitHub CLI ✅"
-else
-  echo "Skipping... GitHub CLI is already installed."
-fi
+echo 'Install GitHub CLI'
+echo '------------------'
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0 &&
+  run_silently sudo apt-add-repository https://cli.github.com/packages &&
+  run_silently sudo apt-get -y update &&
+  run_silently sudo apt-get -y install gh
+show "Successfully installed GitHub CLI ✅"
 
 echo
-if ! command -v valet >/dev/null;then
-  echo 'Install Laravel Valet'
-  echo '---------------------'
-  run_silently composer global require cpriego/valet-linux -q --ignore-platform-req=php
-  valet install
-  show "Successfully installed Laravel Valet ✅"
-else
-  echo "Skipping... Valet is already installed."
-fi
+echo 'Install Laravel Valet'
+echo '---------------------'
+run_silently composer global require cpriego/valet-linux -q --ignore-platform-req=php
+valet install
+show "Successfully installed Laravel Valet ✅"
 
 echo
 echo 'Install Takeout'
