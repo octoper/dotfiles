@@ -41,5 +41,6 @@ ssh-add -A 2>/dev/null;
 # source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 # Extra paths
-export PATH="$HOME/.config/.composer/vendor/bin:$PATH"
+# export PATH="$HOME/.config/.composer/vendor/bin:$PATH"
+export PATH="$PATH:$HOME/.config/composer/vendor/bin"
 export PATH=/usr/local/bin:$PATH
