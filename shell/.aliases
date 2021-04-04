@@ -33,3 +33,10 @@ alias npmgithub="npm config set registry https://npm.pkg.github.com"
 
 #Open
 # alias phpstorm="$(phpstorm $@)"
+
+# Misc
+alias aliases="vim ~/.dotfiles/shell/.aliases"
+alias zshrc="vim ~/.dotfiles/shell/.zshrc"
+
+# Docker
+alias drun="docker run $@"
