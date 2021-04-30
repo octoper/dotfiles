@@ -20,17 +20,25 @@ touch $HOME/.hushlogin
 
 echo
 
-echo 'Install ZSH'
-echo '-----------'
-run_silently sudo apt-get -y install zsh
-show "Successfully installed ZSH ✅"
+if ! [ -x "$(command -v zsh)" ]; then
+  echo 'Install ZSH'
+  echo '-----------'
+  run_silently sudo apt-get -y install zsh
+  show "Successfully installed ZSH ✅"
+else
+  echo "ZSH is already installed 🥳"
+fi
 
-echo
-echo 'Install oh-my-zsh'
-echo '-----------------'
-run_silently rm -rf $HOME/.oh-my-zsh
-run_silently sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-show "Successfully installed oh-my-zsh ✅"
+if [ ! -d $HOME/.oh-my-zsh ]; then
+  echo
+  echo 'Install oh-my-zsh'
+  echo '-----------------'
+  run_silently rm -rf $HOME/.oh-my-zsh
+  run_silently sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+  show "Successfully installed oh-my-zsh ✅"
+else
+  echo "oh-my-zsh is already installed 🥳"
+fi
 
 # Add global gitignore
 [[ ! -e $HOME/.global-gitignore ]] && run_silently ln -s $HOME/.dotfiles/shell/.global-gitignore $HOME/.global-gitignore
@@ -46,6 +54,10 @@ run_silently git config --global core.excludesfile $HOME/.global-gitignore
 [[ -f $HOME/.vim ]] && run_silently rm $HOME/.vim
 [[ ! -e $HOME/.vim ]] && run_silently ln -s $HOME/.dotfiles/shell/.vim $HOME/.vim
 
+# Symlink the Mackup config file to the home directory
+[[ -f $HOME/.mackup.cfg ]] && run_silently rm $HOME/.mackup.cfg
+[[ ! -e $HOME/.mackup.cfg ]] && run_silently ln -s $HOME/.dotfiles/shell/.mackup.cfg $HOME/.mackup.cfg
+
 echo
 echo 'Setting up system '
 echo '------------------'
@@ -54,120 +66,197 @@ run_silently sudo apt-get -y update &&
     git supervisor sqlite3 libcap2-bin libpng-dev python2 \
     network-manager libnss3-tools jq xsel
 show "Done ✅"
-
-echo
-echo 'Install PHP 8.0'
-echo '---------------'
-run_silently sudo add-apt-repository -y ppa:ondrej/php &&
-  run_silently sudo apt-get -y update &&
-  run_silently sudo apt-get install -y php8.0-cli php8.0-dev \
-    php8.0-pgsql php8.0-sqlite3 php8.0-gd \
-    php8.0-curl php8.0-memcached \
-    php8.0-imap php8.0-mysql php8.0-mbstring \
-    php8.0-xml php8.0-zip php8.0-bcmath php8.0-soap \
-    php8.0-intl php8.0-readline \
-    php8.0-msgpack php8.0-igbinary php8.0-ldap \
-    php8.0-redis php8.0-fpm
-show "Successfully installed PHP 8.0 ✅"
-
-echo
-echo 'Install PHP 7.4'
-echo '---------------'
-run_silently sudo apt-get install -y php7.4-cli php7.4-dev \
-  php7.4-pgsql php7.4-sqlite3 php7.4-gd \
-  php7.4-curl php7.4-memcached \
-  php7.4-imap php7.4-mysql php7.4-mbstring \
-  php7.4-xml php7.4-zip php7.4-bcmath php7.4-soap \
-  php7.4-intl php7.4-readline php7.4-pcov \
-  php7.4-msgpack php7.4-igbinary php7.4-ldap \
-  php7.4-redis php7.4-fpm
-show "Successfully installed PHP 7.4 ✅"
-
-echo
-echo 'Install Docker'
-echo '--------------'
-run_silently sudo apt-get remove docker docker.io containerd runc -y
-run_silently sudo apt-get update -y &&
-  run_silently sudo apt-get install -y \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    gnupg-agent \
-    software-properties-common &&
-  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - &&
-  run_silently sudo add-apt-repository -y \
-    "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-   $(lsb_release -cs) \
-   stable" &&
-  run_silently sudo apt-get update -y &&
-  run_silently sudo apt-get -y install docker-ce docker-ce-cli containerd.io
-show "Successfully installed Docker ✅"
-
 echo
 
-echo 'Install Composer'
-echo '----------------'
-EXPECTED_COMPOSER_CHECKSUM="$(curl https://composer.github.io/installer.sig)"
-run_silently php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-ACTUAL_COMPOSER_CHECKSUM="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
-if [ "$EXPECTED_COMPOSER_CHECKSUM" != "$ACTUAL_COMPOSER_CHECKSUM" ]; then
-  echo >&2 'ERROR: Invalid installer checksum'
-  rm composer-setup.php
-  exit 1
+if ! [ -x "$(command -v php8.0)" ]; then
+  echo 'Installing PHP 8.0'
+  echo '---------------'
+  run_silently sudo add-apt-repository -y ppa:ondrej/php &&
+    run_silently sudo apt-get -y update &&
+    run_silently sudo apt-get install -y php8.0-cli php8.0-dev \
+      php8.0-pgsql php8.0-sqlite3 php8.0-gd \
+      php8.0-curl php8.0-memcached \
+      php8.0-imap php8.0-mysql php8.0-mbstring \
+      php8.0-xml php8.0-zip php8.0-bcmath php8.0-soap \
+      php8.0-intl php8.0-readline \
+      php8.0-msgpack php8.0-igbinary php8.0-ldap \
+      php8.0-redis php8.0-fpm
+  show "Successfully installed PHP 8.0 ✅"
+else
+  echo "PHP 8.0 is already installed 🥳"
 fi
-run_silently php composer-setup.php
-run_silently rm composer-setup.php
-run_silently sudo mv composer.phar /usr/local/bin/composer
-show "Successfully installed Composer ✅"
 
-echo
-echo 'Install NodeJS'
-echo '--------------'
-run_silently curl -sL https://deb.nodesource.com/setup_15.x | run_silently sudo -E bash -
-run_silently sudo apt-get install -y nodejs npm
-show "Successfully installed NodeJS ✅"
+if ! [ -x "$(command -v php7.4)" ]; then
+  echo
+  echo 'Installing PHP 7.4'
+  echo '---------------'
+  run_silently sudo apt-get install -y php7.4-cli php7.4-dev \
+    php7.4-pgsql php7.4-sqlite3 php7.4-gd \
+    php7.4-curl php7.4-memcached \
+    php7.4-imap php7.4-mysql php7.4-mbstring \
+    php7.4-xml php7.4-zip php7.4-bcmath php7.4-soap \
+    php7.4-intl php7.4-readline php7.4-pcov \
+    php7.4-msgpack php7.4-igbinary php7.4-ldap \
+    php7.4-redis php7.4-fpm
+  show "Successfully installed PHP 7.4 ✅"
+else
+  echo "PHP 7.4 is already installed 🥳"
+fi
 
-echo ""
-echo 'Configure NPM'
-echo '-------------'
-# Create a directory for global packages and tell npm where to store globally installed packages
-[[ ! -d $HOME/.npm-packages ]] && run_silently mkdir "${HOME}/.npm-packages"
-run_silently npm config set prefix "${HOME}/.npm-packages"
-show "Successfully configured NPM ✅"
+if ! [ -x "$(command -v docker)" ]; then
+  echo
+  echo 'Installing Docker'
+  echo '--------------'
+  run_silently sudo apt-get remove docker docker.io containerd runc -y
+  run_silently sudo apt-get update -y &&
+    run_silently sudo apt-get install -y \
+      apt-transport-https \
+      ca-certificates \
+      curl \
+      gnupg-agent \
+      software-properties-common &&
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - &&
+    run_silently sudo add-apt-repository -y \
+      "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+     $(lsb_release -cs) \
+     stable" &&
+    run_silently sudo apt-get update -y &&
+    run_silently sudo apt-get -y install docker-ce docker-ce-cli containerd.io
+  show "Successfully installed Docker ✅"
+else
+  echo "Docker is already installed 🥳"
+fi
 
-echo
-echo 'Install GitHub CLI'
-echo '------------------'
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0 &&
-  run_silently sudo apt-add-repository https://cli.github.com/packages &&
-  run_silently sudo apt-get -y update &&
-  run_silently sudo apt-get -y install gh
-show "Successfully installed GitHub CLI ✅"
+if ! [ -x "$(command -v composer)" ]; then
+  echo
+  echo 'Installing Composer'
+  echo '----------------'
+  EXPECTED_COMPOSER_CHECKSUM="$(curl https://composer.github.io/installer.sig)"
+  run_silently php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+  ACTUAL_COMPOSER_CHECKSUM="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
+  if [ "$EXPECTED_COMPOSER_CHECKSUM" != "$ACTUAL_COMPOSER_CHECKSUM" ]; then
+    echo >&2 'ERROR: Invalid installer checksum'
+    rm composer-setup.php
+    exit 1
+  fi
+  run_silently php composer-setup.php
+  run_silently rm composer-setup.php
+  run_silently sudo mv composer.phar /usr/local/bin/composer
+  show "Successfully installed Composer ✅"
+else
+  echo "Composer is already installed 🥳"
+fi
 
-echo
-echo 'Install Laravel Valet'
-echo '---------------------'
-run_silently composer global require cpriego/valet-linux -q --ignore-platform-req=php
-valet install
-show "Successfully installed Laravel Valet ✅"
+if ! [ -x "$(command -v nodejs)" ]; then
+  echo
+  echo 'Installing NodeJS'
+  echo '--------------'
+  run_silently curl -sL https://deb.nodesource.com/setup_15.x | run_silently sudo -E bash -
+  run_silently sudo apt-get install -y nodejs npm
+  show "Successfully installed NodeJS ✅"
+else
+  echo "NodeJS is already installed 🥳"
+fi
 
-echo
-echo 'Install Takeout'
-echo '---------------'
-run_silently composer global require tightenco/takeout -q --ignore-platform-req=php
-show "Successfully installed Takeout ✅"
+if ! [ -x "$(command -v npm)" ]; then
+  echo ""
+  echo 'Configure NPM'
+  echo '-------------'
+  # Create a directory for global packages and tell npm where to store globally installed packages
+  [[ ! -d $HOME/.npm-packages ]] && run_silently mkdir "${HOME}/.npm-packages"
+  run_silently npm config set prefix "${HOME}/.npm-packages"
+  show "Successfully configured NPM ✅"
+else
+  echo "NPM is already installed 🥳"
+fi
 
-echo
-echo 'Install Expose'
-echo '--------------'
-run_silently composer global require beyondcode/expose -q --ignore-platform-req=php
-show "Successfully installed Expose ✅"
+if ! [ -x "$(command -v gh)" ]; then
+  echo
+  echo 'Installing GitHub CLI'
+  echo '------------------'
+  sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0 &&
+    run_silently sudo apt-add-repository https://cli.github.com/packages &&
+    run_silently sudo apt-get -y update &&
+    run_silently sudo apt-get -y install gh
+  show "Successfully installed GitHub CLI ✅"
+else
+  echo "GitHub CLI is already installed 🥳"
+fi
 
-echo
-echo 'Install Forge CLI'
-echo '--------------'
-run_silently composer global require beyondcode/forge-cli -q --ignore-platform-req=php
-show "Successfully installed Forge CLI ✅"
+if ! [ -x "$(command -v valet)" ]; then
+  echo
+  echo 'Installing Laravel Valet'
+  echo '---------------------'
+  run_silently composer global require cpriego/valet-linux -q --ignore-platform-req=php
+  valet install
+  show "Successfully installed Laravel Valet ✅"
+else
+  echo "Laravel Valet is already installed 🥳"
+fi
+
+if ! [ -x "$(command -v takeout)" ]; then
+  echo
+  echo 'Installing Takeout'
+  echo '---------------'
+  run_silently composer global require tightenco/takeout -q --ignore-platform-req=php
+  show "Successfully installed Takeout ✅"
+else
+  echo "Takeout is already installed 🥳"
+fi
+
+if ! [ -x "$(command -v expose)" ]; then
+  echo
+  echo 'Installing Expose'
+  echo '--------------'
+  run_silently composer global require beyondcode/expose -q --ignore-platform-req=php
+  show "Successfully installed Expose ✅"
+else
+  echo "Expose is already installed 🥳"
+fi
+
+if ! [ -x "$(command -v forge)" ]; then
+  echo
+  echo 'Installing Forge CLI'
+  echo '--------------'
+  run_silently composer global require beyondcode/forge-cli -q --ignore-platform-req=php
+  show "Successfully installed Forge CLI ✅"
+else
+  echo "Forge CLI is already installed 🥳"
+fi
+
+if ! [ -x "$(command -v pip3)" ]; then
+  echo
+  echo 'Installing Python 3'
+  echo '--------------'
+  run_silently apt-get install python python3-pip
+  show "Successfully installed Python 3 ✅"
+else
+  echo "Python 3 is already installed 🥳"
+fi
+
+if ! [ -x "$(command -v mackup)" ]; then
+  echo
+  echo 'Installing Mackup'
+  echo '--------------'
+  run_silently pip3 install --upgrade mackup --system
+  show "Successfully installed Mackup ✅"
+else
+  echo "Mackup is already installed 🥳"
+fi
+
+if [ -x "$(command -v snap)" ]; then
+  if ! [ -x "$(command -v mackup)" ]; then
+    echo
+    echo 'Installing Golang v1.16'
+    echo '--------------'
+    run_silently sudo snap install --classic --channel=1.16/stable go
+    show "Successfully installed Golang v1.16 ✅"
+  else
+    echo "Golang is already installed 🥳"
+  fi
+else
+  echo "Snap is not installed"
+fi
 
 echo
 echo "Almost ready!"
